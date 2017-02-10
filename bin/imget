@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'imget'
+require 'optparse'
+
+opts = OptionParser.new do |o|
+  o.banner = 'Usage: imget <url>'
+
+  o.on('-v', '--version', 'Show version') do
+    puts Imget::VERSION
+    exit
+  end
+
+  o.on('-h', '--help',  'Get a list of images from url') do
+    puts o
+    exit
+  end
+end
+
+opts.parse!
+
+if ARGV.empty?
+  puts opts
+  exit
+end
+
+begin
+  puts Imget.images_from(ARGV[0])
+rescue Imget::NetworkError
+  puts "Sorry, can't get images from this url"
+rescue StandardError => e
+  puts e.message
+end
